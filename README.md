@@ -32,13 +32,16 @@ Unlike solutions that depend on third-party relayers or centralized operators, E
 
 Users sign once; wallets figure out how to route the transaction across L2s.
 
-### ** CrossfChain Gas Abstraction**
+### **CrossfChain Gas Abstraction**
 
-Users don’t need to hold gas on every cbain.
+Users don’t need to hold gas on every chain.
+Instead, they can pay for gas with tokens from one chain, for all chains in the cross chain transaction
 
-### **Trust-minimized**
+### **Trustless**
 
+* Communication is done solely on-chain.
 No reliance on opaque relayers or off-chain services. Users transact directly with the chain and liquidity providers never know users’ intentions in advance.
+* Users' funds are never at risk. Transfer assets cross chain without relying on a third party cenralized service to release your funds and transact on your behalf.
 
 ### **On-chain Dispute Mechanism**
 
@@ -52,11 +55,11 @@ Here are the major contract components in the Ethereum Interop Layer protocol an
 
 The main singleton EIL contract deployed on every chain.
 
-Acts as the Paymaster for cross-chain gas payments.
+Acts as the Paymaster for cross-chain gas payments on the destination chain.
 
-Users lock funds into this contract on the origin chain, specifying which liquidity providers will be accepted acceptable, and request a Voucher for the destination chain.
+Users lock funds into this contract on the origin chain, specifying which liquidity providers will be accepted, and request a Voucher for the destination chain.
 
-### **`L1CrossChainStakeManager`**
+### **`L1StakeManager`**
 
 Manages the stake of XLPs on the Ethereum Mainnet.
 
@@ -68,11 +71,11 @@ The stake is used for security in case of a dispute. If an XLP misbehaves, their
  
 Represents a user request and the correspondon obligation by an XLP to fulfill the cross-chain transaction on the destination chain.
 
-When a user locks funds in the `CrossChainPaymaster` and requests a voucher,all allowed XLPs compete to issue the `Voucher` according to a fee schedule specified in the `VoucherRequest`.
+When a user locks funds in the `CrossChainPaymaster` and requests a voucher,all allowed XLPs compete to issue the `Voucher` according to a fee schedule specified in the `VoucherRequest` in a reverse dutch auction model.
 
 ### **`Dispute` contracts**
 
-Tbese contracts handle dispute resolution.
+These contracts handle dispute resolution.
 
 If a voucher is misused, or funds are not properly delivered, other actors can submit a dispute on-chain to the L1 and trigger slashing of stake.
 
@@ -89,16 +92,16 @@ When submitting the operation on the origin chain, the UserOp deposits funds int
 
 3. **XLP issues vouchers**  
 
-Registered XLPs on that chain see the request, stake their funds, and submit competing vouchers.
+Registered XLPs on that chain see the request and compete to submit vouchers issuance.
 
 4. **User Operation executes**  
 
-Once an XLP issues a voucher, the UserOp can complete its execution. 
+Once an XLP issues a voucher, the wallet, that listens to this event, attaches the voucher to the destination chain UserOp, and complete its execution. 
 Funds are locked, the voucher is accepted, and the "cross-chain call" is effectively finalized on the destination chain.
 
 5. **Settlement or dispute (if needed)**  
    - If everything goes well, the transaction finalizes on the destination chain.  
-   - If there's a dispute (e.g., XLP doesn’t fulfill or misbehaves), anyone can raise a dispute on L1, and the offending XLP’s stake will be slashed.
+   - If there's a dispute (e.g., XLP doesn’t fulfill or misbehaves), anyone can raise a dispute on L2 origin and destination chains to L1, and the offending XLP’s stake will be slashed.
 
 6. **Redemption / withdrawal**  
    After successful execution, liquidity is reconciled, and XLPs can reclaim funds on the origin chain.
