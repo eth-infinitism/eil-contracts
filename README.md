@@ -32,7 +32,7 @@ Unlike solutions that depend on third-party relayers or centralized operators, E
 
 Users sign once; wallets figure out how to route the transaction across L2s.
 
-### **CrossfChain Gas Abstraction**
+### **CrossChain Gas Abstraction**
 
 Users don’t need to hold gas on every chain.
 Instead, they can pay for gas with tokens from one chain, for all chains in the cross chain transaction
