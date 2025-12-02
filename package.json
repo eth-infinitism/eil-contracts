@@ -7,7 +7,8 @@
     "build": "hardhat compile",
     "clean": "hardhat clean",
     "prepack": "yarn build",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test": "hardhat test"
   },
   "files": [
     "artifacts",
