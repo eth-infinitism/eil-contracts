@@ -1,14 +1,21 @@
 import assert from "node:assert"
 import { describe, it } from "node:test"
 
-import hre from "hardhat"
+import { isAddress } from "viem"
 
-import { erc4337Fixture } from "./fixture/erc4337.ts"
+import { loadEilFixture } from "./fixture/eil.ts"
+import { loadErc4337Fixture } from "./fixture/erc4337.ts"
 
 describe("Fixture", () => {
   it("should load ERC-4337 fixture", async () => {
-    const { networkHelpers } = await hre.network.connect()
-    const { entryPoint } = await networkHelpers.loadFixture(erc4337Fixture)
-    assert.notEqual(entryPoint, "0x")
+    const { entryPoint } = await loadErc4337Fixture()
+    assert.equal(isAddress(entryPoint), true)
+  })
+
+  it("should load EIL fixture", async () => {
+    const eilContract = await loadEilFixture()
+    for (const address of Object.values(eilContract)) {
+      assert.equal(isAddress(address), true)
+    }
   })
 })
