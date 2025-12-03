@@ -9,13 +9,13 @@ import { loadErc4337Fixture } from "./fixture/erc4337.ts"
 describe("Fixture", () => {
   it("should load ERC-4337 fixture", async () => {
     const { entryPoint } = await loadErc4337Fixture()
-    assert.equal(isAddress(entryPoint), true)
+    assert.equal(isAddress(entryPoint.address), true)
   })
 
   it("should load EIL fixture", async () => {
     const eilContract = await loadEilFixture()
-    for (const address of Object.values(eilContract)) {
-      assert.equal(isAddress(address), true)
+    for (const contract of Object.values(eilContract)) {
+      assert.equal(isAddress(contract.address), true)
     }
   })
 })

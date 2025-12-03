@@ -65,7 +65,7 @@ export async function eilFixture() {
   const crossChainPaymaster = await viem.deployContract(
     "CrossChainPaymaster",
     [
-      entryPoint, // IEntryPoint _entryPoint,
+      entryPoint.address, // IEntryPoint _entryPoint,
       l2ArbConnector.address, // address _l2Connector,
       l1ArbConnector.address, // address _l1Connector,
       l1StakeManager.address, // address _l1StakeManager,
@@ -78,13 +78,13 @@ export async function eilFixture() {
     deployConfig
   )
   return {
-    crossChainPaymaster: crossChainPaymaster.address,
-    l1StakeManager: l1StakeManager.address,
-    l1ArbConnector: l1ArbConnector.address,
-    l2ArbConnector: l2ArbConnector.address,
-    originSwapManager: originSwapManager.address,
-    arbInboxMock: arbInboxMock.address,
-    arbOutboxMock: arbOutboxMock.address
+    crossChainPaymaster,
+    l1StakeManager,
+    l1ArbConnector,
+    l2ArbConnector,
+    originSwapManager,
+    arbInboxMock,
+    arbOutboxMock
   }
 }
 
